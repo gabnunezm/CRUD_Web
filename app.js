@@ -1,4 +1,4 @@
-// Variables globales
+
 let vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
 let editingId = null;
 
@@ -6,7 +6,7 @@ let editingId = null;
 const form = document.getElementById('vehicle-form');
 const vehicleList = document.getElementById('vehicle-list');
 
-// Guardar vehículo (Create)
+// Guardar vehículo
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -19,9 +19,15 @@ form.addEventListener('submit', (e) => {
         color: document.getElementById('color').value
     };
 
-        // Agregar vehiculo
-
+    if (editingId) {
+        // Actualiza/edita
+        const index = vehicles.findIndex(v => v.id === editingId);
+        vehicles[index] = vehicle;
+        editingId = null;
+    } else {
+        // Agrega el vehiculo
         vehicles.push(vehicle);
+    }
 
     localStorage.setItem('vehicles', JSON.stringify(vehicles));
     form.reset();
@@ -49,3 +55,16 @@ function renderVehicles() {
     `).join('');
 }
 renderVehicles();
+
+// Editar vehículo
+function editVehicle(id) {
+    const vehicle = vehicles.find(v => v.id === id);
+    if (!vehicle) return;
+
+    editingId = id;
+    document.getElementById('brand').value = vehicle.brand;
+    document.getElementById('model').value = vehicle.model;
+    document.getElementById('year').value = vehicle.year;
+    document.getElementById('price').value = vehicle.price;
+    document.getElementById('color').value = vehicle.color;
+}
