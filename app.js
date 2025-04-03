@@ -1,10 +1,11 @@
-
 let vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
 let editingId = null;
 
 // Elementos del DOM
 const form = document.getElementById('vehicle-form');
 const vehicleList = document.getElementById('vehicle-list');
+const saveBtn = document.getElementById('save-btn');
+const clearBtn = document.getElementById('clear-btn');
 
 // Guardar vehículo
 form.addEventListener('submit', (e) => {
@@ -20,17 +21,14 @@ form.addEventListener('submit', (e) => {
     };
 
     if (editingId) {
-        // Actualiza/edita
         const index = vehicles.findIndex(v => v.id === editingId);
         vehicles[index] = vehicle;
-        editingId = null;
     } else {
-        // Agrega el vehiculo
         vehicles.push(vehicle);
     }
 
     localStorage.setItem('vehicles', JSON.stringify(vehicles));
-    form.reset();
+    resetForm();
     renderVehicles();
 });
 
@@ -54,7 +52,6 @@ function renderVehicles() {
         </tr>
     `).join('');
 }
-renderVehicles();
 
 // Editar vehículo
 function editVehicle(id) {
@@ -67,6 +64,10 @@ function editVehicle(id) {
     document.getElementById('year').value = vehicle.year;
     document.getElementById('price').value = vehicle.price;
     document.getElementById('color').value = vehicle.color;
+    
+    saveBtn.textContent = 'Actualizar';
+    saveBtn.classList.remove('bg-blue-600');
+    saveBtn.classList.add('bg-green-600');
 }
 
 // Eliminar vehículo
@@ -75,3 +76,18 @@ function deleteVehicle(id) {
     localStorage.setItem('vehicles', JSON.stringify(vehicles));
     renderVehicles();
 }
+
+// Limpiar formulario
+function resetForm() {
+    form.reset();
+    editingId = null;
+    saveBtn.textContent = 'Guardar';
+    saveBtn.classList.remove('bg-green-600');
+    saveBtn.classList.add('bg-blue-600');
+}
+
+// Event listener para limpiar
+clearBtn.addEventListener('click', resetForm);
+
+// Inicializar
+renderVehicles();
