@@ -68,3 +68,10 @@ function editVehicle(id) {
     document.getElementById('price').value = vehicle.price;
     document.getElementById('color').value = vehicle.color;
 }
+
+// Eliminar vehículo
+function deleteVehicle(id) {
+    vehicles = vehicles.filter(v => v.id !== id);
+    localStorage.setItem('vehicles', JSON.stringify(vehicles));
+    renderVehicles();
+}
